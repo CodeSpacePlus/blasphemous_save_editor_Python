@@ -1,6 +1,8 @@
 from tkinter import filedialog, PhotoImage
 import tkinter as tk
 import os
+import base64
+import json
 
 
 class Application(object):
@@ -11,15 +13,17 @@ class Application(object):
         self.master.resizable(False, False)
 
         self.navigation = tk.Frame(self.master, bd=1, highlightbackground="black", highlightthickness=.5)
-        self.load = tk.Frame(self.master, bd=1, highlightbackground="green", highlightthickness=.5)
-        self.header = tk.Frame(self.master, bd=1, highlightbackground="blue", highlightthickness=.5)
-        self.stats = tk.Frame(self.master, bd=1, relief=tk.SUNKEN, highlightbackground="gray", highlightthickness=.5)
+        self.main = tk.Frame(self.master, bd=1, highlightbackground="white", highlightthickness=.5)
+        self.load = tk.Frame(self.main, bd=1, highlightbackground="green", highlightthickness=.5)
+        self.header = tk.Frame(self.main, bd=1, highlightbackground="blue", highlightthickness=.5)
+        self.stats = tk.Frame(self.main, bd=1, relief=tk.SUNKEN, highlightbackground="gray", highlightthickness=.5)
         self.footer = tk.Frame(self.master, bd=1, highlightbackground="red", highlightthickness=.5)
 
         self.navigation.place(relx=0, relheight=.10, relwidth=1)
-        self.load.place(rely=.10, relx=0, relheight=.10, relwidth=1)
-        self.header.place(rely=.20, relheight=.60, relwidth=.5)
-        self.stats.place(relx=.5, rely=.20, relheight=.60, relwidth=1.0 - .5)
+        self.main.place(rely=.10, relx=0, relheight=.90, relwidth=1)
+        self.load.place(rely=0, relx=0, relheight=.10, relwidth=1)
+        self.header.place(rely=.1, relheight=1, relwidth=.5)
+        self.stats.place(relx=.5, rely=.1, relheight=1, relwidth=.5)
         self.footer.place(rely=.90, relheight=.10, relwidth=1)
 
         self.selected_item = 0
@@ -41,13 +45,44 @@ class Application(object):
         if not filename:
             return
         self.load_text.set(filename)
+        self.load_file(filename)
+
+    def load_file(self, filepath):
+        file = open(filepath, 'rb')
+        _, file_extension = os.path.splitext(filepath)
+        file_read = file.read()
+
+        if file_extension == '.save':
+            file_decoded = base64.decodebytes(file_read)
+            self.file_json = json.loads(file_decoded)
+        else:
+            self.file_json = json.loads(file_read)
+
+        self.time_text.set(self.file_json['commonElements']['ID_PERSISTENT_MANAGER']['Time'])
+        self.percent_text.set(self.file_json['commonElements']['ID_PERSISTENT_MANAGER']['Percent'])
+        self.purge_text.set(self.file_json['commonElements']['ID_PERSISTENT_MANAGER']['Purge'])
+
+        self.attackSpeed_text.set(self.file_json['commonElements']['ID_STATS']['currentValues']['AttackSpeed'])
+        self.fervour_text.set(self.file_json['commonElements']['ID_STATS']['currentValues']['Fervour'])
+        self.life_text.set(self.file_json['commonElements']['ID_STATS']['currentValues']['Life'])
+        self.flask_text.set(self.file_json['commonElements']['ID_STATS']['currentValues']['Flask'])
+        self.stats_purge_text.set(self.file_json['commonElements']['ID_STATS']['currentValues']['Purge'])
 
     def new_file(self):
         self.load_text.set("NewGame.json")
 
+    def clear_fields(self):
+        _list = self.master.winfo_children()
+        print(_list)
+        for item in _list:
+            print(item.winfo_children())
+            # if item.winfo_children():
+            #     _list.extend(item.winfo_children())
+
     # Widgets
     def navigation_widgets(self):
         home_dic = os.getcwd()
+
         # Home button
         self.home_icon = PhotoImage(file=home_dic + '\\assets\\images\\Menu_home.png')
         self.home_btn = tk.Button(self.navigation, image=self.home_icon, bg='red')
@@ -86,8 +121,8 @@ class Application(object):
     def load_widgets(self):
         # Load textbox
         self.load_text = tk.StringVar()
-        self.load_label = tk.Label(self.load, text='Load:', font=('bold', 14), pady=10)
-        self.load_label.grid(row=0, column=0, sticky=tk.E)
+        self.load_label = tk.Label(self.load, text='Load:', font=('bold', 14))
+        self.load_label.grid(row=0, column=0, sticky=tk.E, pady=5)
         self.load_entry = tk.Entry(self.load, textvariable=self.load_text, width=80, state='disabled')
         self.load_entry.grid(row=0, column=1, sticky=tk.E)
 
@@ -173,7 +208,7 @@ class Application(object):
         self.exit_btn.grid(row=0, column=0, sticky=tk.W, padx=10, pady=10)
 
         # Clear button
-        self.clear_btn = tk.Button(self.footer, text='Clear', width=12)
+        self.clear_btn = tk.Button(self.footer, text='Clear', width=12, command=self.clear_fields)
         self.clear_btn.grid(row=0, column=1, sticky=tk.W)
 
         # Save as button
