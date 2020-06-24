@@ -6,6 +6,7 @@ class Application(object):
         self.master = tk.Tk()
         self.master.geometry("800x500")
         self.master.title('Blasphemous Save Editor -- Python Version: a0.0.1')
+        self.master.resizable(False, False)
 
         self.load = tk.Frame(self.master, bd=1, highlightbackground="green", highlightthickness=.5)
         self.header = tk.Frame(self.master, bd=1, highlightbackground="blue", highlightthickness=.5)
@@ -23,12 +24,15 @@ class Application(object):
         self.footer_widgets()
         self.stats_widgets()
 
+    # Commands
+
+    # Widgets
     def load_widgets(self):
         # Load textbox
         self.load_text = tk.StringVar()
         self.load_label = tk.Label(self.load, text='Load:', font=('bold', 14), pady=10)
         self.load_label.grid(row=0, column=0, sticky=tk.E)
-        self.load_entry = tk.Entry(self.load, textvariable=self.load_text, width=50)
+        self.load_entry = tk.Entry(self.load, textvariable=self.load_text, width=50, state='disabled')
         self.load_entry.grid(row=0, column=1, sticky=tk.E)
 
         # Load button
@@ -42,30 +46,33 @@ class Application(object):
     def header_widgets(self):
         # Time textbox
         self.time_text = tk.StringVar()
+        self.time_text.set("0 s")
         self.time_label = tk.Label(self.header, text='Time:', font=('bold', 14))
         self.time_label.grid(row=2, column=0, sticky=tk.E, pady=(50, 10), padx=(10, 0))
-        self.time_entry = tk.Entry(self.header, textvariable=self.time_text)
+        self.time_entry = tk.Entry(self.header, textvariable=self.time_text, justify=tk.RIGHT, state='disabled')
         self.time_entry.grid(row=2, column=1, sticky=tk.W, pady=(50, 10))
 
         # Percent textbox
         self.percent_text = tk.StringVar()
+        self.percent_text.set("0 %")
         self.percent_label = tk.Label(self.header, text='Percent:', font=('bold', 14), pady=10)
         self.percent_label.grid(row=3, column=0, sticky=tk.E, padx=(10, 0))
-        self.percent_entry = tk.Entry(self.header, textvariable=self.percent_text)
+        self.percent_entry = tk.Entry(self.header, textvariable=self.percent_text, justify=tk.RIGHT)
         self.percent_entry.grid(row=3, column=1, sticky=tk.W)
 
         # Purge textbox
         self.purge_text = tk.StringVar()
+        self.purge_text.set("0")
         self.purge_label = tk.Label(self.header, text='Purge:', font=('bold', 14), pady=10)
         self.purge_label.grid(row=4, column=0, sticky=tk.E, padx=(10, 0))
-        self.purge_entry = tk.Entry(self.header, textvariable=self.purge_text)
+        self.purge_entry = tk.Entry(self.header, textvariable=self.purge_text, justify=tk.RIGHT)
         self.purge_entry.grid(row=4, column=1, sticky=tk.E)
 
         # Location textbox
         self.location_text = tk.StringVar()
         self.location_label = tk.Label(self.header, text='Location:', font=('bold', 14), pady=10)
         self.location_label.grid(row=5, column=0, sticky=tk.E, padx=(10, 0))
-        self.location_entry = tk.Entry(self.header, textvariable=self.location_text)
+        self.location_entry = tk.Entry(self.header, textvariable=self.location_text, justify=tk.RIGHT, state='disabled')
         self.location_entry.grid(row=5, column=1, sticky=tk.E)
 
     def stats_widgets(self):
@@ -101,12 +108,12 @@ class Application(object):
         self.stats_purge_text = tk.StringVar()
         self.stats_purge_label = tk.Label(self.stats, text="Purge:", font=('bold', 14), pady=10)
         self.stats_purge_label.grid(row=4, column=0, sticky=tk.E, padx=(10, 0))
-        self.stats_purge_entry = tk.Entry(self.stats, textvariable=self.purge_text)
+        self.stats_purge_entry = tk.Entry(self.stats, textvariable=self.stats_purge_text)
         self.stats_purge_entry.grid(row=4, column=1, sticky=tk.E)
 
     def footer_widgets(self):
         # Exit button
-        self.exit_btn = tk.Button(self.footer, text='Exit', width=12)
+        self.exit_btn = tk.Button(self.footer, text='Exit', width=12, command=self.master.destroy)
         self.exit_btn.grid(row=0, column=0, sticky=tk.W, padx=10, pady=10)
 
         # Clear button
@@ -117,24 +124,6 @@ class Application(object):
         self.saveAs_btn = tk.Button(self.footer, text='Save as...', width=12)
         self.saveAs_btn.grid(row=0, column=2, sticky=tk.E, columnspan=6, padx=480)
 
-
-# class App(object):
-#     def __init__(self):
-#         self.root = tk.Tk()
-#         # self.root.attributes('-zoomed', True)
-#
-#         f1 = tk.Frame(self.root, bd=1, bg="green")
-#         f2 = tk.Frame(self.root, bd=1, bg="red")
-#         f3 = tk.Frame(self.root, bd=1, bg="blue")
-#
-#         split = 0.5
-#         f1.place(relx=0, relheight=1, relwidth=split)
-#         f2.place(relx=split, relheight=1, relwidth=1.0 - split)
-#         f3.place(height=50, width=100)
-
-
-# app = App()
-# app.root.mainloop()
 
 app = Application()
 app.master.mainloop()
