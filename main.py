@@ -9,29 +9,32 @@ class Application(object):
     def __init__(self):
         self.master = tk.Tk()
         self.master.geometry("800x500")
+        self.master.iconbitmap(os.getcwd() + "/assets/images/mask.ico")
         self.master.title('Blasphemous Save Editor -- Python Version: a0.0.1')
         self.master.resizable(False, False)
 
-        self.navigation = tk.Frame(self.master, bd=1, highlightbackground="black", highlightthickness=.5)
-        self.main = tk.Frame(self.master, bd=1, highlightbackground="white", highlightthickness=.5)
-        self.load = tk.Frame(self.main, bd=1, highlightbackground="green", highlightthickness=.5)
-        self.header = tk.Frame(self.main, bd=1, highlightbackground="blue", highlightthickness=.5)
-        self.stats = tk.Frame(self.main, bd=1, relief=tk.SUNKEN, highlightbackground="gray", highlightthickness=.5)
-        self.footer = tk.Frame(self.master, bd=1, highlightbackground="red", highlightthickness=.5)
+        self.frame_navigation = tk.Frame(self.master, bd=1, highlightbackground="black", highlightthickness=.5)
+        self.frame_menu = tk.Frame(self.master, bd=1, highlightbackground="white", highlightthickness=.5)
+        self.frame_footer = tk.Frame(self.master, bd=1, highlightbackground="red", highlightthickness=.5)
 
-        self.navigation.place(relx=0, relheight=.10, relwidth=1)
-        self.main.place(rely=.10, relx=0, relheight=.90, relwidth=1)
+        # Menu section
+        self.load = tk.Frame(self.frame_menu, bd=1, highlightbackground="green", highlightthickness=.5)
+        self.header = tk.Frame(self.frame_menu, bd=1, highlightbackground="blue", highlightthickness=.5)
+        self.stats = tk.Frame(self.frame_menu, bd=1, relief=tk.SUNKEN, highlightbackground="gray", highlightthickness=.5)
+
+        self.frame_navigation.place(relx=0, relheight=.10, relwidth=1)
+        self.frame_menu.place(rely=.10, relx=0, relheight=.90, relwidth=1)
         self.load.place(rely=0, relx=0, relheight=.10, relwidth=1)
         self.header.place(rely=.1, relheight=1, relwidth=.5)
         self.stats.place(relx=.5, rely=.1, relheight=1, relwidth=.5)
-        self.footer.place(rely=.90, relheight=.10, relwidth=1)
 
-        self.selected_item = 0
+        self.frame_footer.place(rely=.90, relheight=.10, relwidth=1)
+
         self.navigation_widgets()
         self.load_widgets()
         self.header_widgets()
-        self.footer_widgets()
         self.stats_widgets()
+        self.footer_widgets()
 
     # Commands
     def select_file(self):
@@ -39,8 +42,7 @@ class Application(object):
         filename = tk.filedialog.askopenfilename(initialdir=filepath, title='Select file',
                                                  filetype=(
                                                      ('.save file', '.save'),
-                                                     ('.json file', 'json'),
-                                                     ('all files', '.'))
+                                                     ('.json file', 'json'))
                                                  )
         if not filename:
             return
@@ -69,15 +71,29 @@ class Application(object):
         self.stats_purge_text.set(self.file_json['commonElements']['ID_STATS']['currentValues']['Purge'])
 
     def new_file(self):
-        self.load_text.set("NewGame.json")
+        self.load_file(filepath=os.getcwd()+"/assets/NewSave.json")
+        self.load_text.set("NewSave.json")
 
     def clear_fields(self):
-        _list = self.master.winfo_children()
-        print(_list)
-        for item in _list:
-            print(item.winfo_children())
-            # if item.winfo_children():
-            #     _list.extend(item.winfo_children())
+        self.load_text.set("")
+
+        self.time_text.set("0 s")
+        self.percent_text.set("0 %")
+        self.purge_text.set("0")
+        self.location_text.set("-")
+
+        self.attackSpeed_text.set("")
+        self.life_text.set("")
+        self.fervour_text.set("")
+        self.flask_text.set("")
+        self.stats_purge_text.set("")
+
+        # _list = self.master.winfo_children()
+        # print(_list)
+        # for item in _list:
+        #     print(item.winfo_children())
+        #     if item.winfo_children():
+        #         _list.extend(item.winfo_children())
 
     # Widgets
     def navigation_widgets(self):
@@ -85,37 +101,37 @@ class Application(object):
 
         # Home button
         self.home_icon = PhotoImage(file=home_dic + '\\assets\\images\\Menu_home.png')
-        self.home_btn = tk.Button(self.navigation, image=self.home_icon, bg='red')
+        self.home_btn = tk.Button(self.frame_navigation, image=self.home_icon, bg='red')
         self.home_btn.grid(row=0, column=0, sticky=tk.E, padx=(5, 0), pady=(3, 0))
 
         # Hearts button
         self.heart_icon = PhotoImage(file=home_dic + '\\assets\\images\\Menu_hearts.png')
-        self.heart_btn = tk.Button(self.navigation, image=self.heart_icon, bg='red')
+        self.heart_btn = tk.Button(self.frame_navigation, image=self.heart_icon, bg='red')
         self.heart_btn.grid(row=0, column=1, sticky=tk.E, padx=(5, 0), pady=(3, 0))
 
         # Prayers button
         self.prayer_icon = PhotoImage(file=home_dic + '\\assets\\images\\Menu_prayers.png')
-        self.prayer_btn = tk.Button(self.navigation, image=self.prayer_icon, bg='red')
+        self.prayer_btn = tk.Button(self.frame_navigation, image=self.prayer_icon, bg='red')
         self.prayer_btn.grid(row=0, column=2, sticky=tk.E, padx=(5, 0), pady=(3, 0))
 
         # Relics button
         self.relic_icon = PhotoImage(file=home_dic + '\\assets\\images\\Menu_relics.png')
-        self.relic_btn = tk.Button(self.navigation, image=self.relic_icon, bg='red')
+        self.relic_btn = tk.Button(self.frame_navigation, image=self.relic_icon, bg='red')
         self.relic_btn.grid(row=0, column=3, sticky=tk.E, padx=(5, 0), pady=(3, 0))
 
         # Beads button
         self.bead_icon = PhotoImage(file=home_dic + '\\assets\\images\\Menu_beads.png')
-        self.bead_btn = tk.Button(self.navigation, image=self.bead_icon, bg='red')
+        self.bead_btn = tk.Button(self.frame_navigation, image=self.bead_icon, bg='red')
         self.bead_btn.grid(row=0, column=4, sticky=tk.E, padx=(5, 0), pady=(3, 0))
 
         # Stats button
         self.stats_icon = PhotoImage(file=home_dic + '\\assets\\images\\Menu_stats.png')
-        self.stats_btn = tk.Button(self.navigation, image=self.stats_icon, bg='red')
+        self.stats_btn = tk.Button(self.frame_navigation, image=self.stats_icon, bg='red')
         self.stats_btn.grid(row=0, column=5, sticky=tk.E, padx=(5, 0), pady=(3, 0))
 
         # Abilities button
         self.abilities_icon = PhotoImage(file=home_dic + '\\assets\\images\\Menu_abilities.png')
-        self.abilities_btn = tk.Button(self.navigation, image=self.abilities_icon, bg='red')
+        self.abilities_btn = tk.Button(self.frame_navigation, image=self.abilities_icon, bg='red')
         self.abilities_btn.grid(row=0, column=6, sticky=tk.E, padx=(5, 0), pady=(3, 0))
 
     def load_widgets(self):
@@ -131,36 +147,33 @@ class Application(object):
         self.load_btn.grid(row=0, column=2, sticky=tk.E, padx=10)
 
         # New button
-        self.new_btn = tk.Button(self.load, text='New file', width=12)
+        self.new_btn = tk.Button(self.load, text='New file', width=12, command=self.new_file)
         self.new_btn.grid(row=0, column=3, sticky=tk.E)
 
     def header_widgets(self):
         # Time textbox
-        self.time_text = tk.StringVar()
-        self.time_text.set("0 s")
+        self.time_text = tk.StringVar(value="0 s")
         self.time_label = tk.Label(self.header, text='Time:', font=('bold', 14))
         self.time_label.grid(row=2, column=0, sticky=tk.E, pady=(50, 10), padx=(10, 0))
         self.time_entry = tk.Entry(self.header, textvariable=self.time_text, justify=tk.RIGHT, state='disabled')
         self.time_entry.grid(row=2, column=1, sticky=tk.W, pady=(50, 10))
 
         # Percent textbox
-        self.percent_text = tk.StringVar()
-        self.percent_text.set("0 %")
+        self.percent_text = tk.StringVar(value="0 %")
         self.percent_label = tk.Label(self.header, text='Percent:', font=('bold', 14), pady=10)
         self.percent_label.grid(row=3, column=0, sticky=tk.E, padx=(10, 0))
         self.percent_entry = tk.Entry(self.header, textvariable=self.percent_text, justify=tk.RIGHT)
         self.percent_entry.grid(row=3, column=1, sticky=tk.W)
 
         # Purge textbox
-        self.purge_text = tk.StringVar()
-        self.purge_text.set("0")
+        self.purge_text = tk.StringVar(value="0")
         self.purge_label = tk.Label(self.header, text='Purge:', font=('bold', 14), pady=10)
         self.purge_label.grid(row=4, column=0, sticky=tk.E, padx=(10, 0))
         self.purge_entry = tk.Entry(self.header, textvariable=self.purge_text, justify=tk.RIGHT)
         self.purge_entry.grid(row=4, column=1, sticky=tk.E)
 
         # Location textbox
-        self.location_text = tk.StringVar()
+        self.location_text = tk.StringVar(value="-")
         self.location_label = tk.Label(self.header, text='Location:', font=('bold', 14), pady=10)
         self.location_label.grid(row=5, column=0, sticky=tk.E, padx=(10, 0))
         self.location_entry = tk.Entry(self.header, textvariable=self.location_text, justify=tk.RIGHT, state='disabled')
@@ -204,17 +217,24 @@ class Application(object):
 
     def footer_widgets(self):
         # Exit button
-        self.exit_btn = tk.Button(self.footer, text='Exit', width=12, command=self.master.destroy)
+        self.exit_btn = tk.Button(self.frame_footer, text='Exit', width=12, command=self.master.destroy)
         self.exit_btn.grid(row=0, column=0, sticky=tk.W, padx=10, pady=10)
 
         # Clear button
-        self.clear_btn = tk.Button(self.footer, text='Clear', width=12, command=self.clear_fields)
+        self.clear_btn = tk.Button(self.frame_footer, text='Clear', width=12, command=self.clear_fields)
         self.clear_btn.grid(row=0, column=1, sticky=tk.W)
 
         # Save as button
-        self.saveAs_btn = tk.Button(self.footer, text='Save as...', width=12)
+        self.saveAs_btn = tk.Button(self.frame_footer, text='Save as...', width=12)
         self.saveAs_btn.grid(row=0, column=2, sticky=tk.E, columnspan=6, padx=480)
 
+
+def load_json(arg):
+    for asset in arg:
+        json_path = os.getcwd() + '/assets/' + asset + '.json'
+        json_file = open(json_path, 'rb')
+        asset_json = json.loads(json_file.read())
+        return asset_json[asset]
 
 
 app = Application()
