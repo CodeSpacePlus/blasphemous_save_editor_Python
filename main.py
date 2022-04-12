@@ -36,15 +36,15 @@ class Application(object):
     # Commands
     def select_file(self):
         filepath = os.getenv('APPDATA') + '/../LocalLow/TheGameKitchen/Blasphemous/Savegames'
-        filename = tk.filedialog.askopenfilename(initialdir=filepath, title='Select file',
+        self.filename = tk.filedialog.askopenfilename(initialdir=filepath, title='Select file',
                                                  filetype=(
                                                      ('.save file', '.save'),
                                                      ('.json file', 'json'))
                                                  )
-        if not filename:
+        if not self.filename:
             return
-        self.load_text.set(filename)
-        self.load_file(filename)
+        self.load_text.set(self.filename)
+        self.load_file(self.filename)
 
     def load_file(self, filepath):
         file = open(filepath, 'rb')
@@ -57,17 +57,14 @@ class Application(object):
         else:
             self.file_json = json.loads(file_read)
 
-        self.time_text.set(self.file_json['commonElements']['ID_PERSISTENT_MANAGER']['Time'])
-        self.percent_text.set(self.file_json['commonElements']['ID_PERSISTENT_MANAGER']['Percent'])
-        self.purge_text.set(self.file_json['commonElements']['ID_PERSISTENT_MANAGER']['Purge'])
+        self.heart_btn['state'] = 'normal'
+        self.relic_btn['state'] = 'normal'
+        self.prayer_btn['state'] = 'normal'
+        self.bead_btn['state'] = 'normal'
+        self.stats_btn['state'] = 'normal'
+        self.abilities_btn['state'] = 'normal'
 
-        self.attackSpeed_text.set(self.file_json['commonElements']['ID_STATS']['currentValues']['AttackSpeed'])
-        self.fervour_text.set(self.file_json['commonElements']['ID_STATS']['currentValues']['Fervour'])
-        self.life_text.set(self.file_json['commonElements']['ID_STATS']['currentValues']['Life'])
-        self.flask_text.set(self.file_json['commonElements']['ID_STATS']['currentValues']['Flask'])
-        self.general_stats_purge_text.set(self.file_json['commonElements']['ID_STATS']['currentValues']['Purge'])
-
-        self.stats_attackSpeed_text.set(self.file_json['commonElements']['ID_STATS']['currentValues']['AttackSpeed'])
+        self.load_widgets('home')
 
     def new_file(self):
         self.load_file(filepath=os.getcwd()+"/assets/NewSave.json")
@@ -86,6 +83,15 @@ class Application(object):
         self.fervour_text.set("")
         self.flask_text.set("")
         self.general_stats_purge_text.set("")
+
+        self.file_json = ""
+
+        self.heart_btn['state'] = 'disabled'
+        self.relic_btn['state'] = 'disabled'
+        self.prayer_btn['state'] = 'disabled'
+        self.bead_btn['state'] = 'disabled'
+        self.stats_btn['state'] = 'disabled'
+        self.abilities_btn['state'] = 'disabled'
 
     def clear_widgets(self):
         self.load.place_forget()
@@ -108,36 +114,42 @@ class Application(object):
         self.heart_btn = tk.Button(self.frame_navigation, image=self.heart_icon, bg='red', command=partial(self.load_widgets, "hearts"))
         Hovertip(self.heart_btn, "Heart selection", hover_delay=300)
         self.heart_btn.grid(row=0, column=1, sticky=tk.E, padx=(5, 0), pady=(3, 0))
+        self.heart_btn['state'] = 'disabled'
 
         # Prayers button
         self.prayer_icon = PhotoImage(file=home_dic + '\\assets\\images\\Menu_prayers.png')
         self.prayer_btn = tk.Button(self.frame_navigation, image=self.prayer_icon, bg='red', command=partial(self.load_widgets, "prayers"))
         Hovertip(self.prayer_btn, "Prayer selection", hover_delay=300)
         self.prayer_btn.grid(row=0, column=2, sticky=tk.E, padx=(5, 0), pady=(3, 0))
+        self.prayer_btn['state'] = 'disabled'
 
         # Relics button
         self.relic_icon = PhotoImage(file=home_dic + '\\assets\\images\\Menu_relics.png')
         self.relic_btn = tk.Button(self.frame_navigation, image=self.relic_icon, bg='red', command=partial(self.load_widgets, "relics"))
         Hovertip(self.relic_btn, "Relic selection", hover_delay=300)
         self.relic_btn.grid(row=0, column=3, sticky=tk.E, padx=(5, 0), pady=(3, 0))
+        self.relic_btn['state'] = 'disabled'
 
         # Beads button
         self.bead_icon = PhotoImage(file=home_dic + '\\assets\\images\\Menu_beads.png')
         self.bead_btn = tk.Button(self.frame_navigation, image=self.bead_icon, bg='red', command=partial(self.load_widgets, "beads"))
         Hovertip(self.bead_btn, "Bead selection", hover_delay=300)
         self.bead_btn.grid(row=0, column=4, sticky=tk.E, padx=(5, 0), pady=(3, 0))
+        self.bead_btn['state'] = 'disabled'
 
         # Stats button
-        self.general_stats_icon = PhotoImage(file=home_dic + '\\assets\\images\\Menu_stats.png')
-        self.general_stats_btn = tk.Button(self.frame_navigation, image=self.general_stats_icon, bg='red', command=partial(self.load_widgets, "stats"))
-        Hovertip(self.general_stats_btn, "Stats display", hover_delay=300)
-        self.general_stats_btn.grid(row=0, column=5, sticky=tk.E, padx=(5, 0), pady=(3, 0))
+        self.stats_icon = PhotoImage(file=home_dic + '\\assets\\images\\Menu_stats.png')
+        self.stats_btn = tk.Button(self.frame_navigation, image=self.stats_icon, bg='red', command=partial(self.load_widgets, "stats"))
+        Hovertip(self.stats_btn, "Stats display", hover_delay=300)
+        self.stats_btn.grid(row=0, column=5, sticky=tk.E, padx=(5, 0), pady=(3, 0))
+        self.stats_btn['state'] = 'disabled'
 
         # Abilities button
         self.abilities_icon = PhotoImage(file=home_dic + '\\assets\\images\\Menu_abilities.png')
         self.abilities_btn = tk.Button(self.frame_navigation, image=self.abilities_icon, bg='red', command=partial(self.load_widgets, "abilities"))
         Hovertip(self.abilities_btn, "Abilities selection", hover_delay=300)
         self.abilities_btn.grid(row=0, column=6, sticky=tk.E, padx=(5, 0), pady=(3, 0))
+        self.abilities_btn['state'] = 'disabled'
 
     def load_widgets(self, option="home"):
         self.clear_widgets()
@@ -171,6 +183,9 @@ class Application(object):
         self.new_btn = tk.Button(self.load, text='New file', width=12, command=self.new_file)
         self.new_btn.grid(row=0, column=3, sticky=tk.E)
 
+        if(hasattr(self, 'file_json')):
+            self.load_text.set(self.filename)
+
     def header_widgets(self):
         # Time textbox
         self.time_text = tk.StringVar(value="0 s")
@@ -199,6 +214,11 @@ class Application(object):
         self.location_label.grid(row=5, column=0, sticky=tk.E, padx=(10, 0))
         self.location_entry = tk.Entry(self.header, textvariable=self.location_text, justify=tk.RIGHT, state='disabled')
         self.location_entry.grid(row=5, column=1, sticky=tk.E)
+
+        if(hasattr(self, 'file_json')):
+            self.time_text.set(self.file_json['commonElements']['ID_PERSISTENT_MANAGER']['Time'])
+            self.percent_text.set(self.file_json['commonElements']['ID_PERSISTENT_MANAGER']['Percent'])
+            self.purge_text.set(self.file_json['commonElements']['ID_PERSISTENT_MANAGER']['Purge'])
 
     def general_stats_widgets(self):
         # Attack Speed textbox
@@ -236,6 +256,13 @@ class Application(object):
         self.general_stats_purge_entry = tk.Entry(self.general_stats, textvariable=self.general_stats_purge_text)
         self.general_stats_purge_entry.grid(row=4, column=1, sticky=tk.E)
 
+        if(hasattr(self, 'file_json')):
+            self.attackSpeed_text.set(self.file_json['commonElements']['ID_STATS']['currentValues']['AttackSpeed'])
+            self.fervour_text.set(self.file_json['commonElements']['ID_STATS']['currentValues']['Fervour'])
+            self.life_text.set(self.file_json['commonElements']['ID_STATS']['currentValues']['Life'])
+            self.flask_text.set(self.file_json['commonElements']['ID_STATS']['currentValues']['Flask'])
+            self.general_stats_purge_text.set(self.file_json['commonElements']['ID_STATS']['currentValues']['Purge'])
+
     def stats_widgets(self):
         # Attack Speed textbox
         self.stats_attackSpeed_text = tk.StringVar()
@@ -249,6 +276,9 @@ class Application(object):
         self.stats_agility_label.grid(row=1, column=0, sticky=tk.E, padx=(10, 0), pady=(30, 10))
         self.stats_agility_entry = tk.Entry(self.stats, textvariable=self.stats_agility_text)
         self.stats_agility_entry.grid(row=1, column=1, sticky=tk.E, pady=(30, 10))
+
+        if(hasattr(self, 'file_json')):
+            self.stats_attackSpeed_text.set(self.file_json['commonElements']['ID_STATS']['currentValues']['AttackSpeed'])
     
     def footer_widgets(self):
         # Exit button
@@ -264,12 +294,12 @@ class Application(object):
         self.saveAs_btn.grid(row=0, column=2, sticky=tk.E, columnspan=6, padx=480)
 
 
-def load_json(arg):
-    for asset in arg:
-        json_path = os.getcwd() + '/assets/' + asset + '.json'
-        json_file = open(json_path, 'rb')
-        asset_json = json.loads(json_file.read())
-        return asset_json[asset]
+# def load_json(arg):
+#     for asset in arg:
+#         json_path = os.getcwd() + '/assets/' + asset + '.json'
+#         json_file = open(json_path, 'rb')
+#         asset_json = json.loads(json_file.read())
+#         return asset_json[asset]
 
 
 app = Application()
