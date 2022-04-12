@@ -237,11 +237,18 @@ class Application(object):
         self.general_stats_purge_entry.grid(row=4, column=1, sticky=tk.E)
 
     def stats_widgets(self):
+        # Attack Speed textbox
         self.stats_attackSpeed_text = tk.StringVar()
         self.stats_attackSpeed_label = tk.Label(self.stats, text="Attack Speed:")
         self.stats_attackSpeed_label.grid(row=0, column=0, sticky=tk.E, padx=(10, 0), pady=(30, 10))
         self.stats_attackSpeed_entry = tk.Entry(self.stats, textvariable=self.stats_attackSpeed_text)
         self.stats_attackSpeed_entry.grid(row=0, column=1, sticky=tk.E, pady=(30, 10))
+
+        self.stats_agility_text = tk.StringVar()
+        self.stats_agility_label = tk.Label(self.stats, text="Agility:")
+        self.stats_agility_label.grid(row=1, column=0, sticky=tk.E, padx=(10, 0), pady=(30, 10))
+        self.stats_agility_entry = tk.Entry(self.stats, textvariable=self.stats_agility_text)
+        self.stats_agility_entry.grid(row=1, column=1, sticky=tk.E, pady=(30, 10))
     
     def footer_widgets(self):
         # Exit button
