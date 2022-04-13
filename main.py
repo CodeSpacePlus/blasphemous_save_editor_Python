@@ -23,6 +23,7 @@ class Application(object):
         self.load = tk.Frame(self.frame_menu, bd=1, highlightbackground="green", highlightthickness=.5)
         self.header = tk.Frame(self.frame_menu, bd=1, highlightbackground="blue", highlightthickness=.5)
         self.general_stats = tk.Frame(self.frame_menu, bd=1, relief=tk.SUNKEN, highlightbackground="gray", highlightthickness=.5)
+        self.hearts = tk.Frame(self.frame_menu, bd=1, highlightbackground='gray', highlightthickness=.5)
         self.stats = tk.Frame(self.frame_menu, bd=1, highlightbackground="gray", highlightthickness=.5)
 
         self.frame_navigation.place(relx=0, relheight=.10, relwidth=1)
@@ -33,6 +34,18 @@ class Application(object):
         self.load_widgets()
         self.footer_widgets()
 
+        self.hearts_list = self.load_json('hearts')
+        self.prayers_list = self.load_json('prayers')
+        self.relics_list = self.load_json('relics')
+        self.beads_list = self.load_json('beads')
+        self.skills_list = self.load_json('skills')
+
+    def load_json(self, arg):
+        json_path = os.getcwd() + '/assets/' + arg + '.json'
+        json_file = open(json_path, 'rb')
+        asset_json = json.loads(json_file.read())
+        return asset_json[arg]
+    
     # Commands
     def select_file(self):
         filepath = os.getenv('APPDATA') + '/../LocalLow/TheGameKitchen/Blasphemous/Savegames'
@@ -162,6 +175,10 @@ class Application(object):
                 self.file_widgets()
                 self.header_widgets()
                 self.general_stats_widgets()
+            
+            case 'hearts':
+                self.hearts.place(relheight=1, relwidth=1)
+                self.hearts_widgets()
 
             case "stats":
                 self.stats.place(relheight=1, relwidth=1)
@@ -170,18 +187,18 @@ class Application(object):
     def file_widgets(self):
         # Load textbox
         self.load_text = tk.StringVar()
-        self.load_label = tk.Label(self.load, text='Load:', font=('bold', 14))
-        self.load_label.grid(row=0, column=0, sticky=tk.E, pady=5)
-        self.load_entry = tk.Entry(self.load, textvariable=self.load_text, width=80, state='disabled')
-        self.load_entry.grid(row=0, column=1, sticky=tk.E)
+        load_label = tk.Label(self.load, text='Load:', font=('bold', 14))
+        load_label.grid(row=0, column=0, sticky=tk.E, pady=5)
+        load_entry = tk.Entry(self.load, textvariable=self.load_text, width=80, state='disabled')
+        load_entry.grid(row=0, column=1, sticky=tk.E)
 
         # Load button
-        self.load_btn = tk.Button(self.load, text='Load file', width=12, command=self.select_file)
-        self.load_btn.grid(row=0, column=2, sticky=tk.E, padx=10)
+        load_btn = tk.Button(self.load, text='Load file', width=12, command=self.select_file)
+        load_btn.grid(row=0, column=2, sticky=tk.E, padx=10)
 
         # New button
-        self.new_btn = tk.Button(self.load, text='New file', width=12, command=self.new_file)
-        self.new_btn.grid(row=0, column=3, sticky=tk.E)
+        new_btn = tk.Button(self.load, text='New file', width=12, command=self.new_file)
+        new_btn.grid(row=0, column=3, sticky=tk.E)
 
         if(hasattr(self, 'file_json')):
             self.load_text.set(self.filename)
@@ -189,31 +206,31 @@ class Application(object):
     def header_widgets(self):
         # Time textbox
         self.time_text = tk.StringVar(value="0 s")
-        self.time_label = tk.Label(self.header, text='Time:', font=('bold', 14))
-        self.time_label.grid(row=2, column=0, sticky=tk.E, pady=(50, 10), padx=(10, 0))
-        self.time_entry = tk.Entry(self.header, textvariable=self.time_text, justify=tk.RIGHT, state='disabled')
-        self.time_entry.grid(row=2, column=1, sticky=tk.W, pady=(50, 10))
+        time_label = tk.Label(self.header, text='Time:', font=('bold', 14))
+        time_label.grid(row=2, column=0, sticky=tk.E, pady=(50, 10), padx=(10, 0))
+        time_entry = tk.Entry(self.header, textvariable=self.time_text, justify=tk.RIGHT, state='disabled')
+        time_entry.grid(row=2, column=1, sticky=tk.W, pady=(50, 10))
 
         # Percent textbox
         self.percent_text = tk.StringVar(value="0 %")
-        self.percent_label = tk.Label(self.header, text='Percent:', font=('bold', 14), pady=10)
-        self.percent_label.grid(row=3, column=0, sticky=tk.E, padx=(10, 0))
-        self.percent_entry = tk.Entry(self.header, textvariable=self.percent_text, justify=tk.RIGHT)
-        self.percent_entry.grid(row=3, column=1, sticky=tk.W)
+        percent_label = tk.Label(self.header, text='Percent:', font=('bold', 14), pady=10)
+        percent_label.grid(row=3, column=0, sticky=tk.E, padx=(10, 0))
+        percent_entry = tk.Entry(self.header, textvariable=self.percent_text, justify=tk.RIGHT)
+        percent_entry.grid(row=3, column=1, sticky=tk.W)
 
         # Purge textbox
         self.purge_text = tk.StringVar(value="0")
-        self.purge_label = tk.Label(self.header, text='Purge:', font=('bold', 14), pady=10)
-        self.purge_label.grid(row=4, column=0, sticky=tk.E, padx=(10, 0))
-        self.purge_entry = tk.Entry(self.header, textvariable=self.purge_text, justify=tk.RIGHT)
-        self.purge_entry.grid(row=4, column=1, sticky=tk.E)
+        purge_label = tk.Label(self.header, text='Purge:', font=('bold', 14), pady=10)
+        purge_label.grid(row=4, column=0, sticky=tk.E, padx=(10, 0))
+        purge_entry = tk.Entry(self.header, textvariable=self.purge_text, justify=tk.RIGHT)
+        purge_entry.grid(row=4, column=1, sticky=tk.E)
 
         # Location textbox
         self.location_text = tk.StringVar(value="-")
-        self.location_label = tk.Label(self.header, text='Location:', font=('bold', 14), pady=10)
-        self.location_label.grid(row=5, column=0, sticky=tk.E, padx=(10, 0))
-        self.location_entry = tk.Entry(self.header, textvariable=self.location_text, justify=tk.RIGHT, state='disabled')
-        self.location_entry.grid(row=5, column=1, sticky=tk.E)
+        location_label = tk.Label(self.header, text='Location:', font=('bold', 14), pady=10)
+        location_label.grid(row=5, column=0, sticky=tk.E, padx=(10, 0))
+        location_entry = tk.Entry(self.header, textvariable=self.location_text, justify=tk.RIGHT, state='disabled')
+        location_entry.grid(row=5, column=1, sticky=tk.E)
 
         if(hasattr(self, 'file_json')):
             self.time_text.set(self.file_json['commonElements']['ID_PERSISTENT_MANAGER']['Time'])
@@ -223,38 +240,38 @@ class Application(object):
     def general_stats_widgets(self):
         # Attack Speed textbox
         self.attackSpeed_text = tk.StringVar()
-        self.attackSpeed_label = tk.Label(self.general_stats, text='Attack Speed:', font=('bold', 14))
-        self.attackSpeed_label.grid(row=0, column=0, sticky=tk.E, padx=(10, 0), pady=(30, 10))
-        self.attackSpeed_entry = tk.Entry(self.general_stats, textvariable=self.attackSpeed_text)
-        self.attackSpeed_entry.grid(row=0, column=1, sticky=tk.E, pady=(30, 10))
+        attackSpeed_label = tk.Label(self.general_stats, text='Attack Speed:', font=('bold', 14))
+        attackSpeed_label.grid(row=0, column=0, sticky=tk.E, padx=(10, 0), pady=(30, 10))
+        attackSpeed_entry = tk.Entry(self.general_stats, textvariable=self.attackSpeed_text)
+        attackSpeed_entry.grid(row=0, column=1, sticky=tk.E, pady=(30, 10))
 
         # Fervour textbox
         self.fervour_text = tk.StringVar()
-        self.fervour_label = tk.Label(self.general_stats, text='Fervour:', font=('bold', 14), pady=10)
-        self.fervour_label.grid(row=1, column=0, sticky=tk.E, padx=(10, 0))
-        self.fervour_entry = tk.Entry(self.general_stats, textvariable=self.fervour_text)
-        self.fervour_entry.grid(row=1, column=1, sticky=tk.E)
+        fervour_label = tk.Label(self.general_stats, text='Fervour:', font=('bold', 14), pady=10)
+        fervour_label.grid(row=1, column=0, sticky=tk.E, padx=(10, 0))
+        fervour_entry = tk.Entry(self.general_stats, textvariable=self.fervour_text)
+        fervour_entry.grid(row=1, column=1, sticky=tk.E)
 
         # Life textbox
         self.life_text = tk.StringVar()
-        self.life_label = tk.Label(self.general_stats, text="Life:", font=('bold', 14), pady=10)
-        self.life_label.grid(row=2, column=0, sticky=tk.E, padx=(10, 0))
-        self.life_entry = tk.Entry(self.general_stats, textvariable=self.life_text)
-        self.life_entry.grid(row=2, column=1, sticky=tk.E)
+        life_label = tk.Label(self.general_stats, text="Life:", font=('bold', 14), pady=10)
+        life_label.grid(row=2, column=0, sticky=tk.E, padx=(10, 0))
+        life_entry = tk.Entry(self.general_stats, textvariable=self.life_text)
+        life_entry.grid(row=2, column=1, sticky=tk.E)
 
         # Flask textbox
         self.flask_text = tk.StringVar()
-        self.flask_label = tk.Label(self.general_stats, text="Flask:", font=('bold', 14), pady=10)
-        self.flask_label.grid(row=3, column=0, sticky=tk.E, padx=(10, 0))
-        self.flask_entry = tk.Entry(self.general_stats, textvariable=self.flask_text)
-        self.flask_entry.grid(row=3, column=1, sticky=tk.E)
+        flask_label = tk.Label(self.general_stats, text="Flask:", font=('bold', 14), pady=10)
+        flask_label.grid(row=3, column=0, sticky=tk.E, padx=(10, 0))
+        flask_entry = tk.Entry(self.general_stats, textvariable=self.flask_text)
+        flask_entry.grid(row=3, column=1, sticky=tk.E)
 
         # Purge textbox
         self.general_stats_purge_text = tk.StringVar()
-        self.general_stats_purge_label = tk.Label(self.general_stats, text="Purge:", font=('bold', 14), pady=10)
-        self.general_stats_purge_label.grid(row=4, column=0, sticky=tk.E, padx=(10, 0))
-        self.general_stats_purge_entry = tk.Entry(self.general_stats, textvariable=self.general_stats_purge_text)
-        self.general_stats_purge_entry.grid(row=4, column=1, sticky=tk.E)
+        general_stats_purge_label = tk.Label(self.general_stats, text="Purge:", font=('bold', 14), pady=10)
+        general_stats_purge_label.grid(row=4, column=0, sticky=tk.E, padx=(10, 0))
+        general_stats_purge_entry = tk.Entry(self.general_stats, textvariable=self.general_stats_purge_text)
+        general_stats_purge_entry.grid(row=4, column=1, sticky=tk.E)
 
         if(hasattr(self, 'file_json')):
             self.attackSpeed_text.set(self.file_json['commonElements']['ID_STATS']['currentValues']['AttackSpeed'])
@@ -263,43 +280,54 @@ class Application(object):
             self.flask_text.set(self.file_json['commonElements']['ID_STATS']['currentValues']['Flask'])
             self.general_stats_purge_text.set(self.file_json['commonElements']['ID_STATS']['currentValues']['Purge'])
 
+    def hearts_widgets(self):
+        home_dic = os.getcwd()
+
+        for index, heart in enumerate(self.hearts_list):
+            # PhotoImages have to be self/global 
+            globals()[heart['name'] + "_icon"] = PhotoImage(file=home_dic + f"\\assets\\real_hearts\\{heart['source']}.png")
+            locals()[heart['name'] + "_label"] = tk.Label(self.hearts, text=heart['name'])
+            locals()[heart['name'] + "_label"].grid(row=index, column=0, sticky=tk.E)
+            locals()[heart['name'] + "_button"] = tk.Button(self.hearts, image=globals()[heart['name'] + "_icon"])
+            locals()[heart['name'] + "_button"].grid(row=index, column=1, sticky=tk.E)
+        # for heart in self.hearts_list:
+        #     # locals()[heart['name'] + "_text"] = tk.StringVar()
+        #     
+        #     locals()[heart['name'] + "_label"] = heart['name']
+        #     print(locals()[heart['name'] + "_label"])
+        #     
+
+
+    
     def stats_widgets(self):
         # Attack Speed textbox
-        self.stats_attackSpeed_text = tk.StringVar()
-        self.stats_attackSpeed_label = tk.Label(self.stats, text="Attack Speed:")
-        self.stats_attackSpeed_label.grid(row=0, column=0, sticky=tk.E, padx=(10, 0), pady=(30, 10))
-        self.stats_attackSpeed_entry = tk.Entry(self.stats, textvariable=self.stats_attackSpeed_text)
-        self.stats_attackSpeed_entry.grid(row=0, column=1, sticky=tk.E, pady=(30, 10))
+        stats_attackSpeed_text = tk.StringVar()
+        stats_attackSpeed_label = tk.Label(self.stats, text="Attack Speed:")
+        stats_attackSpeed_label.grid(row=0, column=0, sticky=tk.E, padx=(10, 0), pady=(30, 10))
+        stats_attackSpeed_entry = tk.Entry(self.stats, textvariable=stats_attackSpeed_text)
+        stats_attackSpeed_entry.grid(row=0, column=1, sticky=tk.E, pady=(30, 10))
 
-        self.stats_agility_text = tk.StringVar()
-        self.stats_agility_label = tk.Label(self.stats, text="Agility:")
-        self.stats_agility_label.grid(row=1, column=0, sticky=tk.E, padx=(10, 0), pady=(30, 10))
-        self.stats_agility_entry = tk.Entry(self.stats, textvariable=self.stats_agility_text)
-        self.stats_agility_entry.grid(row=1, column=1, sticky=tk.E, pady=(30, 10))
+        stats_agility_text = tk.StringVar()
+        stats_agility_label = tk.Label(self.stats, text="Agility:")
+        stats_agility_label.grid(row=1, column=0, sticky=tk.E, padx=(10, 0), pady=(30, 10))
+        stats_agility_entry = tk.Entry(self.stats, textvariable=stats_agility_text)
+        stats_agility_entry.grid(row=1, column=1, sticky=tk.E, pady=(30, 10))
 
         if(hasattr(self, 'file_json')):
-            self.stats_attackSpeed_text.set(self.file_json['commonElements']['ID_STATS']['currentValues']['AttackSpeed'])
+            stats_attackSpeed_text.set(self.file_json['commonElements']['ID_STATS']['currentValues']['AttackSpeed'])
     
     def footer_widgets(self):
         # Exit button
-        self.exit_btn = tk.Button(self.frame_footer, text='Exit', width=12, command=self.master.destroy)
-        self.exit_btn.grid(row=0, column=0, sticky=tk.W, padx=10, pady=10)
+        exit_btn = tk.Button(self.frame_footer, text='Exit', width=12, command=self.master.destroy)
+        exit_btn.grid(row=0, column=0, sticky=tk.W, padx=10, pady=10)
 
         # Clear button
-        self.clear_btn = tk.Button(self.frame_footer, text='Clear', width=12, command=self.clear_fields)
-        self.clear_btn.grid(row=0, column=1, sticky=tk.W)
+        clear_btn = tk.Button(self.frame_footer, text='Clear', width=12, command=self.clear_fields)
+        clear_btn.grid(row=0, column=1, sticky=tk.W)
 
         # Save as button
-        self.saveAs_btn = tk.Button(self.frame_footer, text='Save as...', width=12)
-        self.saveAs_btn.grid(row=0, column=2, sticky=tk.E, columnspan=6, padx=480)
-
-
-# def load_json(arg):
-#     for asset in arg:
-#         json_path = os.getcwd() + '/assets/' + asset + '.json'
-#         json_file = open(json_path, 'rb')
-#         asset_json = json.loads(json_file.read())
-#         return asset_json[asset]
+        saveAs_btn = tk.Button(self.frame_footer, text='Save as...', width=12)
+        saveAs_btn.grid(row=0, column=2, sticky=tk.E, columnspan=6, padx=480)
 
 
 app = Application()
