@@ -309,44 +309,76 @@ class Application(object):
 
     def hearts_widgets(self):
         global home_dic
+        row_num = 0
+        column_num = 0
 
         for index, heart in enumerate(self.hearts_list):
             # PhotoImages have to be self/global 
             globals()[heart['name'] + "_icon"] = PhotoImage(file=home_dic + f"\\assets\\real_hearts\\{heart['source']}.png")
             locals()[heart['name'] + "_label"] = tk.Label(self.hearts, text=heart['name'])
-            locals()[heart['name'] + "_label"].grid(row=index, column=0, sticky=tk.E)
             locals()[heart['name'] + "_button"] = tk.Button(self.hearts, image=globals()[heart['name'] + "_icon"])
-            locals()[heart['name'] + "_button"].grid(row=index, column=1, sticky=tk.E)
+            # locals()[heart['name'] + "_label"].grid(row=index, column=column_num, sticky=tk.E)
+            locals()[heart['name'] + "_button"].grid(row=row_num, column=column_num, sticky=tk.E)
+            
+            column_num += 1
+
+            if(column_num > 2):
+                column_num = 0
+                row_num += 1
 
     def prayer_widgets(self):
         global home_dic
+        column_num = 0
+        row_num = 0
 
         for index, prayer in enumerate(self.prayers_list):
             globals()[prayer['name'] + "_icon"] = PhotoImage(file=home_dic + f"\\assets\\real_prayers\\{prayer['source']}.png")
             locals()[prayer['name'] + "_label"] = tk.Label(self.prayers, text=prayer['name'])
-            locals()[prayer['name'] + "_label"].grid(row=index, column=0, sticky=tk.E)
             locals()[prayer['name'] + "_button"] = tk.Button(self.prayers, image=globals()[prayer['name'] + "_icon"])
-            locals()[prayer['name'] + "_button"].grid(row=index, column=1, sticky=tk.E)
+            # locals()[prayer['name'] + "_label"].grid(row=index, column=0, sticky=tk.E)
+            locals()[prayer['name'] + "_button"].grid(row=row_num, column=column_num, sticky=tk.E)
+
+            column_num += 1
+
+            if(column_num > 2):
+                column_num = 0
+                row_num += 1
 
     def relic_widgets(self):
         global home_dic
+        column_num = 0
+        row_num = 0
 
         for index, relic in enumerate(self.relics_list):
             globals()[relic['name'] + "_icon"] = PhotoImage(file=home_dic + f"\\assets\\real_relics\\{relic['source']}.png")
             locals()[relic['name'] + "_label"] = tk.Label(self.relics, text=relic['name'])
-            locals()[relic['name'] + "_label"].grid(row=index, column=0, sticky=tk.E)
             locals()[relic['name'] + "_button"] = tk.Button(self.relics, image=globals()[relic['name'] + "_icon"])
-            locals()[relic['name'] + "_button"].grid(row=index, column=1, sticky=tk.E)
+            # locals()[relic['name'] + "_label"].grid(row=index, column=0, sticky=tk.E)
+            locals()[relic['name'] + "_button"].grid(row=row_num, column=column_num, sticky=tk.E)
+
+            column_num += 1
+
+            if(column_num > 2):
+                column_num = 0
+                row_num += 1
 
     def bead_widgets(self):
         global home_dic
+        column_num = 0
+        row_num = 0
 
         for index, bead in enumerate(self.beads_list):
             globals()[bead['name'] + "_icon"] = PhotoImage(file=home_dic + f"\\assets\\real_beads\\{bead['source']}.png")
             locals()[bead['name'] + "_label"] = tk.Label(self.beads, text=bead['name'])
-            locals()[bead['name'] + "_label"].grid(row=index, column=0, sticky=tk.E)
             locals()[bead['name'] + "_button"] = tk.Button(self.beads, image=globals()[bead['name'] + "_icon"])
-            locals()[bead['name'] + "_button"].grid(row=index, column=1, sticky=tk.E)
+            # locals()[bead['name'] + "_label"].grid(row=index, column=0, sticky=tk.E)
+            locals()[bead['name'] + "_button"].grid(row=row_num, column=column_num, sticky=tk.E)
+
+            column_num += 1
+
+            if(column_num > 6):
+                column_num = 0
+                row_num += 1
     
     def stats_widgets(self):
         # Attack Speed textbox
@@ -367,13 +399,21 @@ class Application(object):
     
     def abilities_widgets(self):
         global home_dic
+        column_num = 0
+        row_num = 0
 
         for index, abilities in enumerate(self.abilities_list):
             globals()[abilities['name'] + "_icon"] = PhotoImage(file=home_dic + f"\\assets\\real_skills\\{abilities['source']}.png")
             locals()[abilities['name'] + "_label"] = tk.Label(self.abilities, text=abilities['name'])
-            locals()[abilities['name'] + "_label"].grid(row=index, column=0, sticky=tk.E)
             locals()[abilities['name'] + "_button"] = tk.Button(self.abilities, image=globals()[abilities['name'] + "_icon"])
-            locals()[abilities['name'] + "_button"].grid(row=index, column=1, sticky=tk.E)
+            # locals()[abilities['name'] + "_label"].grid(row=index, column=0, sticky=tk.E)
+            locals()[abilities['name'] + "_button"].grid(row=row_num, column=column_num, sticky=tk.E)
+
+            row_num += 1
+
+            if(row_num > 2):
+                row_num = 0
+                column_num += 1
     
     def footer_widgets(self):
         # Exit button
