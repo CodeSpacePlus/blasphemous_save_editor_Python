@@ -7,6 +7,8 @@ import base64
 import json
 
 
+home_dic = os.getcwd()
+
 class Application(object):
     def __init__(self):
         self.master = tk.Tk()
@@ -24,7 +26,11 @@ class Application(object):
         self.header = tk.Frame(self.frame_menu, bd=1, highlightbackground="blue", highlightthickness=.5)
         self.general_stats = tk.Frame(self.frame_menu, bd=1, relief=tk.SUNKEN, highlightbackground="gray", highlightthickness=.5)
         self.hearts = tk.Frame(self.frame_menu, bd=1, highlightbackground='gray', highlightthickness=.5)
+        self.prayers = tk.Frame(self.frame_menu, bd=1, highlightbackground='gray', highlightthickness=.5)
+        self.relics = tk.Frame(self.frame_menu, bd=1, highlightbackground='gray', highlightthickness=.5)
+        self.beads = tk.Frame(self.frame_menu, bd=1, highlightbackground='gray', highlightthickness=.5)
         self.stats = tk.Frame(self.frame_menu, bd=1, highlightbackground="gray", highlightthickness=.5)
+        self.abilities = tk.Frame(self.frame_menu, bd=1, highlightbackground="gray", highlightthickness=.5)
 
         self.frame_navigation.place(relx=0, relheight=.10, relwidth=1)
         self.frame_menu.place(rely=.10, relx=0, relheight=.90, relwidth=1)
@@ -38,7 +44,7 @@ class Application(object):
         self.prayers_list = self.load_json('prayers')
         self.relics_list = self.load_json('relics')
         self.beads_list = self.load_json('beads')
-        self.skills_list = self.load_json('skills')
+        self.abilities_list = self.load_json('skills')
 
     def load_json(self, arg):
         json_path = os.getcwd() + '/assets/' + arg + '.json'
@@ -110,11 +116,16 @@ class Application(object):
         self.load.place_forget()
         self.header.place_forget()
         self.general_stats.place_forget()
+        self.hearts.place_forget()
+        self.prayers.place_forget()
+        self.relics.place_forget()
+        self.beads.place_forget()
         self.stats.place_forget()
+        self.abilities.place_forget()
     
     # Widgets
     def navigation_widgets(self):
-        home_dic = os.getcwd()
+        global home_dic
 
         # Home button
         self.home_icon = PhotoImage(file=home_dic + '\\assets\\images\\Menu_home.png')
@@ -180,9 +191,25 @@ class Application(object):
                 self.hearts.place(relheight=1, relwidth=1)
                 self.hearts_widgets()
 
+            case 'prayers':
+                self.prayers.place(relheight=1, relwidth=1)
+                self.prayer_widgets()
+
+            case 'relics':
+                self.relics.place(relheight=1, relwidth=1)
+                self.relic_widgets()
+
+            case 'beads':
+                self.beads.place(relheight=1, relwidth=1)
+                self.bead_widgets()
+
             case "stats":
                 self.stats.place(relheight=1, relwidth=1)
                 self.stats_widgets()
+
+            case 'abilities':
+                self.abilities.place(relheight=1, relwidth=1)
+                self.abilities_widgets()
 
     def file_widgets(self):
         # Load textbox
@@ -281,7 +308,7 @@ class Application(object):
             self.general_stats_purge_text.set(self.file_json['commonElements']['ID_STATS']['currentValues']['Purge'])
 
     def hearts_widgets(self):
-        home_dic = os.getcwd()
+        global home_dic
 
         for index, heart in enumerate(self.hearts_list):
             # PhotoImages have to be self/global 
@@ -290,14 +317,36 @@ class Application(object):
             locals()[heart['name'] + "_label"].grid(row=index, column=0, sticky=tk.E)
             locals()[heart['name'] + "_button"] = tk.Button(self.hearts, image=globals()[heart['name'] + "_icon"])
             locals()[heart['name'] + "_button"].grid(row=index, column=1, sticky=tk.E)
-        # for heart in self.hearts_list:
-        #     # locals()[heart['name'] + "_text"] = tk.StringVar()
-        #     
-        #     locals()[heart['name'] + "_label"] = heart['name']
-        #     print(locals()[heart['name'] + "_label"])
-        #     
 
+    def prayer_widgets(self):
+        global home_dic
 
+        for index, prayer in enumerate(self.prayers_list):
+            globals()[prayer['name'] + "_icon"] = PhotoImage(file=home_dic + f"\\assets\\real_prayers\\{prayer['source']}.png")
+            locals()[prayer['name'] + "_label"] = tk.Label(self.prayers, text=prayer['name'])
+            locals()[prayer['name'] + "_label"].grid(row=index, column=0, sticky=tk.E)
+            locals()[prayer['name'] + "_button"] = tk.Button(self.prayers, image=globals()[prayer['name'] + "_icon"])
+            locals()[prayer['name'] + "_button"].grid(row=index, column=1, sticky=tk.E)
+
+    def relic_widgets(self):
+        global home_dic
+
+        for index, relic in enumerate(self.relics_list):
+            globals()[relic['name'] + "_icon"] = PhotoImage(file=home_dic + f"\\assets\\real_relics\\{relic['source']}.png")
+            locals()[relic['name'] + "_label"] = tk.Label(self.relics, text=relic['name'])
+            locals()[relic['name'] + "_label"].grid(row=index, column=0, sticky=tk.E)
+            locals()[relic['name'] + "_button"] = tk.Button(self.relics, image=globals()[relic['name'] + "_icon"])
+            locals()[relic['name'] + "_button"].grid(row=index, column=1, sticky=tk.E)
+
+    def bead_widgets(self):
+        global home_dic
+
+        for index, bead in enumerate(self.beads_list):
+            globals()[bead['name'] + "_icon"] = PhotoImage(file=home_dic + f"\\assets\\real_beads\\{bead['source']}.png")
+            locals()[bead['name'] + "_label"] = tk.Label(self.beads, text=bead['name'])
+            locals()[bead['name'] + "_label"].grid(row=index, column=0, sticky=tk.E)
+            locals()[bead['name'] + "_button"] = tk.Button(self.beads, image=globals()[bead['name'] + "_icon"])
+            locals()[bead['name'] + "_button"].grid(row=index, column=1, sticky=tk.E)
     
     def stats_widgets(self):
         # Attack Speed textbox
@@ -315,6 +364,16 @@ class Application(object):
 
         if(hasattr(self, 'file_json')):
             stats_attackSpeed_text.set(self.file_json['commonElements']['ID_STATS']['currentValues']['AttackSpeed'])
+    
+    def abilities_widgets(self):
+        global home_dic
+
+        for index, abilities in enumerate(self.abilities_list):
+            globals()[abilities['name'] + "_icon"] = PhotoImage(file=home_dic + f"\\assets\\real_skills\\{abilities['source']}.png")
+            locals()[abilities['name'] + "_label"] = tk.Label(self.abilities, text=abilities['name'])
+            locals()[abilities['name'] + "_label"].grid(row=index, column=0, sticky=tk.E)
+            locals()[abilities['name'] + "_button"] = tk.Button(self.abilities, image=globals()[abilities['name'] + "_icon"])
+            locals()[abilities['name'] + "_button"].grid(row=index, column=1, sticky=tk.E)
     
     def footer_widgets(self):
         # Exit button
